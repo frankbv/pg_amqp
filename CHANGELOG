@@ -1,3 +1,6 @@
+0.4.2
+-- Add support for headers
+
 0.4.1
 -- Clarify commit warning messages with error codes. Also corrected the warning message for rollbacks (Github Pull Request #15).
 

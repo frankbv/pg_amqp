@@ -7,12 +7,13 @@ CREATE FUNCTION @extschema@.autonomous_publish(
     , content_type varchar default null
     , reply_to varchar default null
     , correlation_id varchar default null
+    , headers varchar[] default null
 )
 
 RETURNS boolean AS 'pg_amqp.so', 'pg_amqp_autonomous_publish'
 LANGUAGE C IMMUTABLE;
 
-COMMENT ON FUNCTION @extschema@.autonomous_publish(integer, varchar, varchar, varchar, integer, varchar, varchar, varchar) IS
+COMMENT ON FUNCTION @extschema@.autonomous_publish(integer, varchar, varchar, varchar, integer, varchar, varchar, varchar, varchar[]) IS
 'Works as amqp.publish does, but the message is published immediately irrespective of the
 current transaction state.  PostgreSQL commit and rollback at a later point will have no
 effect on this message being sent to AMQP.';
@@ -56,16 +57,17 @@ CREATE FUNCTION @extschema@.publish(
     , content_type varchar default null
     , reply_to varchar default null
     , correlation_id varchar default null
+    , headers varchar[] default null
 )
 RETURNS boolean AS 'pg_amqp.so', 'pg_amqp_publish'
 LANGUAGE C IMMUTABLE;
 
-COMMENT ON FUNCTION @extschema@.publish(integer, varchar, varchar, varchar, integer, varchar, varchar, varchar) IS
+COMMENT ON FUNCTION @extschema@.publish(integer, varchar, varchar, varchar, integer, varchar, varchar, varchar, varchar[]) IS
 'Publishes a message (broker_id, exchange, routing_key, message). 
 The message will only be published if the containing PostgreSQL transaction successfully commits.  
 Under certain circumstances, the AMQP commit might fail.  In this case, a WARNING is emitted. 
-The last four parameters are optional and set the following message properties: 
-delivery_mode (either 1 or 2), content_type, reply_to and correlation_id.
+The last five parameters are optional and set the following message properties:
+delivery_mode (either 1 or 2), content_type, reply_to, correlation_id and headers.
 
 Publish returns a boolean indicating if the publish command was successful.  Note that as
 AMQP publish is asynchronous, you may find out later it was unsuccessful.';

@@ -50,6 +50,8 @@
 #include "access/xact.h"
 #include "utils/memutils.h"
 #include "utils/builtins.h"
+#include "utils/array.h"
+#include "catalog/pg_type.h"
 #include "librabbitmq/amqp.h"
 #include "librabbitmq/amqp_framing.h"
 
@@ -322,7 +324,26 @@ pg_amqp_publish_opt(PG_FUNCTION_ARGS, int channel) {
 	  properties._flags |= AMQP_BASIC_CORRELATION_ID_FLAG;
 	  set_bytes_from_text(properties.correlation_id, 7);
       }
-      
+
+      /* Sets headers */
+      if (!PG_ARGISNULL(8)) {
+        ArrayType *array = PG_GETARG_ARRAYTYPE_P(8);
+        Datum *elems;
+        int elem_count;
+        int i;
+
+        deconstruct_array(array, TEXTOID, -1, false, 'i', &elems, NULL, &elem_count);
+        properties._flags |= AMQP_BASIC_HEADERS_FLAG;
+        properties.headers.num_entries = elem_count;
+        properties.headers.entries = MemoryContextAllocZero(TopMemoryContext, elem_count * sizeof(struct amqp_table_entry_t_));
+        for (i = 0; i < elem_count; i++) {
+          properties.headers.entries[i].key.bytes = VARDATA_ANY(elems[i]);
+          properties.headers.entries[i].key.len = VARSIZE_ANY_EXHDR(elems[i]);
+          properties.headers.entries[i].kind = 'S';
+          properties.headers.entries[i].value.bytes = amqp_cstring_bytes("");
+        }
+      }
+
       set_bytes_from_text(exchange_b,1);
       set_bytes_from_text(routing_key_b,2);
       set_bytes_from_text(body_b,3);
