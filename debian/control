@@ -1,0 +1,33 @@
+Source: pg-amqp
+Section: database
+Priority: optional
+Maintainer: Frank IT <it@frank.nl>
+Build-Depends: debhelper (>= 9), postgresql-server-dev-all (>= 223~)
+Standards-Version: 4.1.5
+Vcs-Browser: https://github.com/frankbv/pg_amqp.git
+Vcs-Git: https://github.com/frankbv/pg_amqp.git
+Homepage: https://github.com/frankbv/pg_amqp.git
+
+Package: postgresql-10-amqp
+Architecture: amd64
+Depends: postgresql-10, ${misc:Depends}, ${shlibs:Depends}
+Description: Communicate with AMQP servers
+ pg_amqp is an extension that enables PostgreSQL to communicate with AMQP servers.
+
+Package: postgresql-11-amqp
+Architecture: amd64
+Depends: postgresql-11, ${misc:Depends}, ${shlibs:Depends}
+Description: Communicate with AMQP servers
+ pg_amqp is an extension that enables PostgreSQL to communicate with AMQP servers.
+
+Package: postgresql-12-amqp
+Architecture: amd64
+Depends: postgresql-12, ${misc:Depends}, ${shlibs:Depends}
+Description: Communicate with AMQP servers
+ pg_amqp is an extension that enables PostgreSQL to communicate with AMQP servers.
+
+Package: postgresql-13-amqp
+Architecture: amd64
+Depends: postgresql-13, ${misc:Depends}, ${shlibs:Depends}
+Description: Communicate with AMQP servers
+ pg_amqp is an extension that enables PostgreSQL to communicate with AMQP servers.

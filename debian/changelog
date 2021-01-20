@@ -1,0 +1,5 @@
+pg-amqp (0.4.2-1~frank2) unstable; urgency=medium
+
+  * Debian package
+
+ -- Frank IT <it@frank.nl>  Wed, 20 Jan 2021 22:24:12 +0100
